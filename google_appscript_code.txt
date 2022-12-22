@@ -1,0 +1,59 @@
+
+var sheet_id="1_mA3xwDgPM93mbqGr7lle9oR1QcLzKxraeTXwqZcfQk";
+var sheet_name="BT20ECE074_ESP";
+
+var ss=SpreadsheetApp.openById(sheet_id);
+var sheet=ss.getSheetByName(sheet_name);
+
+function doGet(e)
+{
+      var unique_id=sheet.getDataRange().getLastRow()+1;
+      
+      var command=String(e.parameter.command);
+      if(command=="read")
+      {
+        return getActiveValue(e.parameter.cell_location);
+      }
+      if(command=="write_user")
+      {
+         write_username(unique_id,e.parameter.user_name,e.parameter.password);
+         return ContentService.createTextOutput(unique_id);
+        
+      }
+      if(command=="update_balance")
+      {
+        setActiveValue(e.parameter.cell_location, e.parameter.update_balance);
+        
+              
+        
+      }
+      if(command=="update_summary")
+      {
+        setActiveValue(e.parameter.cell_location, e.parameter.transaction_history);
+               
+      }
+      
+      
+}
+
+function write_username(unique_id,user_name,password)
+{
+      
+      sheet.appendRow([unique_id,user_name,password,15000]);
+      
+      
+}
+
+
+function getActiveValue(read) {
+  // Retrieve and return the information requested by the sidebar.
+  
+  
+  return ContentService.createTextOutput(sheet.getRange(read).getValue());
+}
+
+function setActiveValue(cell_location,value) {
+  // Use data collected from sidebar to manipulate the sheet.
+  
+  sheet.getRange(cell_location).setValue(value);
+}
